@@ -149,15 +149,6 @@ print(ans)
 
 
 
-
-
-
-
-
-
-
-
-
 # -------------------------------------------- 
 
 # Part 4: 
@@ -181,22 +172,13 @@ print(ans)
 # -------------------------------------------- 
 
 
+def sleep_time_calc(x, y):
+	clock = input('What time do you wish to use? 12-hours to 24-hours:  ').lower()
+	sleep_start = input('When do you go to sleep? Please type in numbers: ').lower() 
+	sleep_end = input('When do you wake up? Please type in numbers: ').lower()
 
+	if clock = "12-hours":
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	elif clock = "24-hours":
 
 
