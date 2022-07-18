@@ -7,6 +7,68 @@ def check_answers(gen_answer, correct_answer):
     else:
 	    print(f"Try again, your code generated {gen_answer} but the correct answer is {correct_answer}")
 
+def add_numbers(x, y):
+	return x+y
+
+def sub_numbers(x, y):
+	return x-y
+
+def multiply_numbers(x, y):
+	return x*y
+
+def divide_numbers(x, y):
+	return x/y
+
+def calculator():
+	active = True
+
+	while active:
+		print('Type exit to stop program.')
+		operation = input('What do you want to do?(Add, Sub, Multiply, Divide): ').lower()
+
+		if operation == 'exit':
+			active = False
+			print('\n')
+		else:
+			num1 = int(input('Enter any number: '))
+			num2 = int(input('Enter any number: '))
+		
+			if operation == 'add':
+				ans = add_numbers(num1, num2)
+				print(f'The answer is {ans}. \n')
+
+			elif operation == 'sub':
+				ans = sub_numbers(num1, num2)
+				print(f'The answer is {ans}. \n')
+
+			elif operation == 'multiply':
+				ans = multiply_numbers(num1, num2)
+				print(f'The answer is {ans}. \n')
+
+			elif operation == 'divide':
+				ans = divide_numbers(num1, num2)
+				print(f'The answer is {ans}. \n')
+
+			else:
+				print('Invalid Operation')
+
+def sleep_time_calc():
+	active = True
+	sleep_start = int(input('Which hour do you go to sleep? Please type in numbers: '))
+	sleep_end = int(input('Which hour do you wake up? Please type in numbers: '))
+
+	while active:
+		clock = input('What time do you wish to use? 12-hours to 24-hours:  ').lower()
+		if clock == "12-hours":
+			sleep_end = sleep_end+12
+			return sleep_end-sleep_start
+			active = False
+		elif clock == "24-hours":
+			return sleep_end-sleep_start
+			active = False
+		else:
+			print('--Invalid clock--')
+
 # -------------------------------------------- 
 
 	# You've just learned all about functions. 
@@ -37,23 +99,7 @@ print("My Simple Calculator")
 # -------------------------------------------- 
  
 # Write a function called add_numbers that will take two numbers and return the sum.
-
-def add_numbers(num1, num2):
-	return num1+num2
-
-num1 = int(input('Enter any number: '))
-num2 = int(input('Enter any number: '))
-ans = add_numbers(num1, num2)
-print(f'The answer is {ans}.\n')
 # Write a function called sub_numbers that will take two numbers and return the difference.
-
-def sub_numbers(num1, num2):
-	return num1-num2
-
-num1 = int(input('Enter any number: '))
-num2 = int(input('Enter any number: '))
-ans = sub_numbers(num1, num2)
-print(f'The answer is {ans}.\n')
 # ------------
 # Testing Code - Uncomment the code below to test your code!
 
@@ -80,31 +126,7 @@ check_answers(sub_numbers(18, 21), -3)
 # -------------------------------------------- 
 
 # Write a function called multiply_numbers that will take two numbers and return the product.
-
-def multiply_numbers(num1, num2):
-	return num1*num2
-
-num1 = int(input('Enter any number: '))
-num2 = int(input('Enter any number: '))
-ans = multiply_numbers(num1, num2)
-print(f'The answer is {ans}.\n')
-
-
-
-
 # Write a function called divide_numbers that will take two numbers and return the quotient.
-
-def divide_numbers(num1, num2):
-	return num1/num2
-
-num1 = int(input('Enter any number: '))
-num2 = int(input('Enter any number: '))
-ans = divide_numbers(num1, num2)
-print(f'The answer is {ans}.\n')
-
-
-
-
 # ------------
 # Testing Code - Uncomment the code below to test your code!
 
@@ -126,38 +148,6 @@ check_answers(divide_numbers(15, 4), 3.75)
 # Write a function that will prompt the user for the operation they want to call and the values they are inputting.
 
 # -------------------------------------------- 
-
-operation = input('Enter an operation(Add, Sub, Multiply, Divide): ')
-num1 = int(input('Enter any number: '))
-num2 = int(input('Enter any number: '))
-
-
-if operation == 'Add':
-	ans = add_numbers(num1, num2)
-elif operation == 'Sub':
-	ans = sub_numbers(num1, num2)
-elif operation == "Multiply":
-	ans = multiply_numbers(num1, num2)
-elif operation == 'Divide':
-	ans = divide_numbers(num1, num2)
-else:
-	print('Invalid Operation')
-
-print(ans)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # -------------------------------------------- 
 
 # Part 4: 
@@ -179,24 +169,51 @@ print(ans)
 		# Test your code!
   
 # -------------------------------------------- 
+calculator()
 
+use_sleep_calc = input('Do you wish to use the sleep calculator?(yes or no): ').lower()
+if use_sleep_calc == 'yes':
+	ans = sleep_time_calc()
+	print(ans, 'hours of sleep time.')
 
+	if ans <= 0:
+		for_real = input('Did you put in the values correctly?(yes or no): ').lower()
+		if for_real == 'yes':
+			print('HOW CAN YOU EVEN GET NEGATIVE HOURS OF SLEEP!? \n')
+		if for_real == 'no':
+			print('Oh, I see. You scared me! \n')
+	elif ans >= 12:
+			print('Wake up lazybones, stop sleeping and get to work! \n')
+	elif ans >= 24:
+		print('YOU SHOULD REALLY GET OUT OF BED!!! \n')
 
+else:
+	print('Ok, thank you for using the simple calculator. \n')
 
+#--------------Continuing Calculator----------------
 
+def cont_calc():
+	active = True
+	numbers = []
+	blank = '--Blank Input, Try Again--'
 
+	while active:
+		operation = input('What operation do you wish to use?(Add, Sub, Multiply, or Divide): ').lower()
 
+		if operation.strip():
+			if len(numbers) == 0:
+				num_input = int(input('What number?: '))
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+		if operation.strip():
+			numbers.append(num_input)
+			num1 = numbers.pop(0)
+			num_input = int(input('What number?: '))
+			if operation == 'add':
+				result = add_numbers(num1, num_input)
+				print(result)
+				
+			else:
+				print(blank)
+		else:
+			print(blank)
+cont_calc()

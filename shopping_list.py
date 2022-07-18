@@ -71,7 +71,7 @@ while active:
     user_cmd = 0
 
 
-    if user_input != "" and user_input != " ":
+    if user_input != "":
         user_input = user_input.split()
         user_cmd = user_input.pop(0)
         user_input = " ".join(user_input)
