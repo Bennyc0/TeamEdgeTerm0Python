@@ -115,28 +115,30 @@ for color in colors:
 
 #-->TODO Write a function that prints every letter in a sentence that a user enters.
 
-def sentence_letter_num():
-    sentence = input('Please type in your sentence: ')
+# def sentence_letter_num():
+#     sentence = input('Please type in your sentence: ')
     
-    for word in sentence:
-        for letter in word:
-            print(letter)
-    
-    short_word = len(sentence[-1])
 
-    for word in sentence:
-        letters = len(word)
-        if letters < short_word:
-            short_word = sentence.pop(0)
-        elif len(sentence) == 1:
-            print('The shortest word in your sentence is: ', short_word)
-        else:
-            removed = sentence.pop(0)
+#     for word in sentence:
+#         for letter in word:
+#             print(letter)
+    
+#     short_word = len(sentence[-1])
+
+#     for word in sentence:
+#         letters = len(word)
+#         if letters < short_word:
+#             short_word = sentence.pop(0)
+#         elif len(sentence) == 1:
+#             print('The shortest word in your sentence is: ', short_word)
+#         else:
+#             removed = sentence.pop(0)
         
         
 
 
 
-sentence_letter_num()
+# sentence_letter_num()
+
 #-->UPCHALLENGE: Let the user know which word is the shortest one!
 
