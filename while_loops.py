@@ -148,18 +148,25 @@ print("------------------- CHALLENGE 5 : WHAT AM I?   -------------------")
 #         You are given two starter functions and a loop to get started! 
 #         Notice how one function calls the other and uses the returned value as the input. This is called Recursion! 
 
-keep_asking = True
+# keep_asking = True
 
-def prompt_user():
-    user_input = input("I know you are a _____, but what am I? >> ")
-    return user_input
+# def prompt_user():
+#     user_input = response(response)
+#     user_input = input("I know you are a _____, but what am I? >> ")
+#     return user_input
 
-def response(response):
-    print(f"I know you are a {user_input}, but what am I? >> ")
-    return 
+# def response(response):
+#     print(f"I know you are a {user_input}, but what am I? >> ")
+#     prompt_user()
 
-while keep_asking:
-  response(prompt_user())
+# user_input = '_____'
+# while keep_asking:
+#   response(prompt_user())
+
+
+
+
+#couldn't figure it out so i made my own
 
 # user_input = '_____'
 # while keep_asking:
