@@ -314,7 +314,7 @@ def start():
         
     
     print(cmds)
-    player = Player(player_name, ["letter"])
+    player = Player(player_name, [])
 
 # ---game system---
 def prompt_player():
@@ -400,13 +400,13 @@ def player_command(input):
         print("Blacksmith: Ok, hang on for a bit, im almost done with the sword. \n--<15 minutes later>-- \n")
         print(f"--<{player.name} obtained a sword!>--")
     
-    elif input == "pickup letter" and current_area == grassy_fields_northeast:
+    elif input == ['pickup', 'letter'] and current_area == grassy_fields_northeast:
         players.items.append("letter")
         print("The letter is addressed to the head knight of the city.")
         print(f"--<{player.name} obtained a letter!>--")
     
-    elif input == "give letter" and current_area == city_square:
-        players.items.remove("letter")
+    elif input == ['give', 'letter'] and current_area == city_square:
+        player.items.remove("letter")
         print("--<You have successfully delivered the letter to the head knight>--")
         completion = "True"
         
