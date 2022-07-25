@@ -70,7 +70,7 @@ def check_answer(input):
             index = rooms.index(room)
             current_room = rooms[index]
             print("You are now at the : " + current_room.name)
-      
+            
     else:
       print("No you can't go there")
       
