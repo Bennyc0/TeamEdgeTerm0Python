@@ -1,4 +1,4 @@
-#blocks are removed
+#sorry about the bad organization, didn't bother organizing it but at least the code works.
 import random
 from time import sleep
 delay = 1
@@ -22,7 +22,7 @@ class Enemy:
         self.dialogue = dialogue
         self.health = health
         self.damage = damage
-        self.moves = ["slashes", "slices", "cuts", "stabs", "counters"]
+        self.move = ["slashes", "slices", "cuts", "stabs", "counters"]
 
     def __repr__(self):
         return f"\n{self.discription} \n{self.dialogue} \n"
@@ -35,9 +35,6 @@ class Enemy:
             self_move = random.choice(self.moves)
             enemy.health = round(enemy.health-self.damage)
 
-            print(f"{self.name} {self_move} {enemy.name} for {self.damage} damage!")
-            print(f"{enemy.name}'s hp: {enemy.health} \n{self.name}'s hp: {self.health} \n")
-
 # ----------Player----------
 class Player:
     def __init__(self, name, items):
@@ -46,7 +43,7 @@ class Player:
         self.health = 100
         self.damage = 0
         self.accuracy = 0
-        self.moves = None
+        self.move = None
     
     def __repr__(self):
         return f"\nName: {self.name} \nItems in inventory: {self.items} \n" 
@@ -55,18 +52,8 @@ class Player:
         return self.health > 0
     
     def move_selection(self):
+        global select_move
         active = True
-
-        def cancelation():
-            select_move = input("Which move do you wish to use?>> ")
-            print("\n")
-            sleep(delay)
-
-            if select_move == "cancel":
-                return "cancel"
-            else: 
-                return select_move
-
         
         while active:
             if "sword" in player.items:
@@ -74,24 +61,24 @@ class Player:
                 if "melee" in move_type or "sword" in move_type:
                     pass
                 else:
-                    print("--<Unable to understand your selection>--")
+                    print("--<Unable to understand your selection>-- \n")
             else:
                 move_type = "melee"
 
 
             if "melee" in move_type:
                 print(melee_attacks_list)
-                select_move = cancelation()
+                select_move = input("Which move do you wish to use?>> ")
                 for attack in melee_attacks_dict:
                     if select_move == attack:
-                        attack = melee_attacks_dict.get(attack)
+                        attack = melee_attacks_dict.get(attack)                       
                         self.damage = attack.accuracy_check()
                         return attack.name
                         active = False
 
             elif "sword" in move_type:
                 print(sword_attacks_list)
-                select_move = cancelation()
+                select_move = input("Which move do you wish to use?>> ")
                 for attack in sword_attacks_dict:
                     if select_move == attack:
                         attack = sword_attacks_dict.get(attack)
@@ -99,27 +86,91 @@ class Player:
                         return attack.name
                         active = False
 
+    def block_check(self):
+        if select_move == "block" or select_move == "sword block":
+            return True
+        else:
+            return False
     
     def attack(self, enemy):
+        global last_select_move
         print(f"{self.name}'s hp: {self.health} \n{enemy.name}'s hp: {enemy.health} \n")
 
         while self.is_alive() and enemy.is_alive():
-            self_move = self.move_selection()
-            enemy.health = round(enemy.health-self.damage)
+            active = True
+            self.move = self.move_selection()
+            enemy_move = random.choice(enemy.move)
 
-            if self.damage > 0:
-                print(f"{self.name} used {self_move} and dealt {self.damage} damage to {enemy.name}!")
+
+            if self.block_check():
+                self.damage = 0
+                block_chance = random.randint(0, 25)
+
+                while active:
+                    player_guess = input(" \nPlease guess a number(0-25): ")
+                    if player_guess.isdigit():
+                        if int(player_guess) == block_chance:
+                            block_percent = 100
+                            print("\n --<Perfect Block!>-- \n")
+                            active = False
+
+                        elif int(player_guess) >= block_chance-3 and int(player_guess) <= block_chance+3:
+                            block_percent = 5
+                            perfect_block = False
+                            print("\n --<Good Block!>-- \n")
+                            active = False
+
+                        elif int(player_guess) >= block_chance-7 and int(player_guess) <= block_chance+7:
+                            block_percent = 3
+                            print(f"{self.name} uses {self.move}. {self.name} is ready to block some damage. \n")
+                            active = False     
+
+                        else:
+                            print("\n --<Block Failed!>-- \n")
+                            block_percent = 1
+                            active = False
+                    else:
+                        print("--<Please enter a whole number from 0 to 25>--")
+
             else:
-                print(f"{self.name} used {self_move}. The {self_move} missed!")
+                if self.damage > 0:
+                    enemy.health = round(enemy.health-self.damage)
+                    print(f"{self.name} used {self.move} and dealt {self.damage} damage to {enemy.name}!")
 
-            print(f"{self.name}'s hp: {self.health} \n{enemy.name}'s hp: {enemy.health} \n")
+                else:
+                    print(f"{self.name} used {self.move}. The {self.move} missed!")
+
+                print(f"{self.name}'s hp: {self.health} \n{enemy.name}'s hp: {enemy.health} \n")
+
+
 
             if self.is_alive() and enemy.is_alive():
-                enemy_move = random.choice(enemy.moves)
-                self.health = round(self.health-enemy.damage)
+                if select_move == "block" or select_move == "sword block":
+                    if block_percent == 100:
+                        print(f"{self.name} excuted a Perfect Block! {self.name} took no damage. The {enemy.name} needs time to recover.")
+                        print(f"{self.name}'s hp: {self.health} \n{enemy.name}'s hp: {enemy.health} \n")
+                        use_hp_pot = input("Do you want to take this chance to use a hp potion?>> ")
+                            
+                        if "yes" in use_hp_pot:
+                            self.health = self.health+30
+                            print(" \n--<You gained 30  more health!>-- \n")
+                            print(f"{self.name}'s hp: {self.health} \n{enemy.name}'s hp: {enemy.health} \n")
+                        else:
+                            print(f" \n--<You take a deep breath and prepare to fight>-- \n")
 
-                print(f"{enemy.name} {enemy_move} {self.name} for {enemy.damage} damage!")
-                print(f"{self.name}'s hp: {self.health} \n{enemy.name}'s hp: {enemy.health} \n")
+                    elif block_percent == 1:
+                        self.health = round(self.health-enemy.damage/block_percent)
+                        print(f"The {enemy.name}'s {enemy_move} did {round(enemy.damage/block_percent)} damage.")
+                    else:
+                        self.health = round(self.health-enemy.damage/block_percent)
+                        print(f"{self.name} used {self.move}! The {enemy.name}'s {enemy_move} did {round(enemy.damage/block_percent)} damage.")
+                        print(f"{self.name}'s hp: {self.health} \n{enemy.name}'s hp: {enemy.health} \n")
+
+                else:
+                    self.health = round(self.health-enemy.damage)
+                    print(f"{enemy.name} {enemy_move} {self.name} for {enemy.damage} damage!")
+                    print(f"{self.name}'s hp: {self.health} \n{enemy.name}'s hp: {enemy.health} \n")
+
 
         if self.is_alive():
             print("--<You Won!>-- \n")
@@ -146,13 +197,14 @@ class Player_attack:
     def accuracy_check(self):
         random_number = random.randint(0,100)
 
-        if random_number >= self.accuracy:
-            player.damage = 0
-            return player.damage
-            return f"{self.name} has missed the target."
+        if random_number <= self.accuracy:
+            self.damage = 0
+            return self.damage
         else:
-            player.damage = self.damage
-            return player.damage
+            self.damage = self.damage
+            return self.damage
+
+
 
 # ----------Places----------
 class Area:
@@ -177,7 +229,7 @@ citizen1 = NPC("Worried Lady", "A lady that has a very worried expression on her
 citizen2 = NPC("Busy Merchant", "A merchant unloading his boxes of wares from his cart.", "Merchant: Quit blocking my path! I gotta get these boxes unloaded.")
 blacksmith = NPC("Working Blacksmith", "A blacksmith hammering away on his unfinished sword.", "Blacksmith: Hm? What are you doing here? Are you here for the sword?")
 sheep = NPC("A Sheep", "A sheep eating its grass and enjoying the weather", "Sheep: BAAAAAAAA! \n(It's trying to tell you to leave it alone.)")
-traveler = NPC("Traveler", "A heavily wounded traveler.", "Traveler: Take this letter and give  it to the head knight in the city for me please. I won't be able to make it with these injuries. Also, whatever you do, don't go into the forest. \n--<Type 'pickup letter' to take the letter>--")
+traveler = NPC("Traveler", "A heavily wounded traveler.", "Traveler: TAKE this letter and GIVE it to the head knight in the city for me please. I won't be able to make it with these injuries. Also, whatever you do, don't go into the forest. \n--<Type 'take letter' to take the letter>--")
 head_knight = NPC("Head Knight", "The head of the knights of the city.", "Head Knight: How can I help you?")
 
 npc_dict = {
@@ -197,8 +249,8 @@ npc_dict = {
 bandit_alone = Enemy("Bandit", "--<A bandit with a cloak appeared>--", "Bandit: MWAHAHAHAHA- DIE!!!", 100, random.randint(10, 20))
 bandit_pair = Enemy("Bandit Pair", "--<2 wild bandits appeared!>--", "Bandits: HAND OVER YOUR MONEY NOW!", random.randint(40, 75), random.randint(5,25))
 bandit_group = Enemy("Bandit Group", "--<A group of wild bandits appeared!>--", "Bandits: Take your pick, life or money?", random.randint(80, 120), random.randint(10, 25))
-bandit_army = Enemy("Bandit Army", "--<An army of wild bandits appeared!>--", "DIE INTRUDER!", 100000, 100000)
-bandit_leader = Enemy("Bandit Leader", "--<The boss of the wild bandits has appeared!>--", "You shouldn't had come here kid...", 100000, 100000)
+bandit_army = Enemy("Bandit Army", "--<An army of wild bandits appeared!>--", "DIE INTRUDER!", 250, 25)
+bandit_leader = Enemy("Bandit Leader", "--<The boss of the wild bandits has appeared!>--", "You shouldn't had come here kid...", 500, 50)
 # bandit alone, bandit group, and leader is supposed to be not fightable
 
 enemy_dict = {
@@ -215,7 +267,7 @@ sword_pierce = Player_attack("Sword Pierce", "A piercing attacking with your swo
 sword_slice = Player_attack("Sword Slice", "A slicing attack using your sword. It it very weak, but is easy to use and hit your target.", random.randint(10, 15), 95)
 # sword_parry = Player_attack("Sword Parry", "A hard defensive technique that allows to you prevent an enemy attack landing on you. You also reflect most damage.", round(enemy_move*4/5), 70)
 # sword_counter = Player_attack("Sword Counter", "A defensive technique that allows you to reflect partial damage to your enemy.", round(enemy_move*2/5), 90)
-#sword_block = Player_attack("Sword Block", "A basic defensive technique that blocks and prevents most damage.", 0, 100)
+sword_block = Player_attack("Sword Block", "A basic defensive technique that blocks and prevents most damage.", 0, 100)
 #nerfing sword blocks, cant have the player blocking and then attacking while enemy is "stunned", scratch the original plan.
 #parry and counter are WIP, might not be finished and used.
 
@@ -224,17 +276,17 @@ uppercut = Player_attack("Uppercut", "A low punch that goes upwards.", random.ra
 down_chop = Player_attack("Downwards Chop", "A chopping attack. You chop your enemies hard on the head with this. They are going to be seeing stars.", random.randint(20, 25), 70)
 low_kick = Player_attack("Low Kick", "A kick that gets them almost everytime.", random.randint(10, 15), 90)
 roundhouse_kick = Player_attack("Roundhouse Kick", "A semicircular kick, striking the enemy with your leg. Easy to evade but hits hard.", random.randint(30, 40), 60)
-#block = Player_attack("Block", "Blocks your enemy's attack with your arms. Gonna hurt, even with armor on.", 0, 100)
+block = Player_attack("Block", "Blocks your enemy's attack with your arms. Gonna hurt, even with armor on.", 0, 100)
 #accuracy system is used to balance out the game. Attack selection will be pointless without different damage, can't have the player picking strongest attack everytime.
 
-sword_attacks_list = ["sword pierce", "heavy slash", "sword slice"]
-melee_attacks_list = ["down chop", "low kick", "punch", "roundhouse kick", "uppercut"]
+sword_attacks_list = ["sword pierce", "heavy slash", "sword slice", "sword block"]
+melee_attacks_list = ["down chop", "low kick", "punch", "roundhouse kick", "uppercut", "block"]
 
 sword_attacks_dict = {
     "heavy slash": heavy_slash,
     "sword pierce": sword_pierce,
-    "sword slice": sword_slice
-#    "sword block": sword_block
+    "sword slice": sword_slice,
+    "sword block": sword_block
 }
 
 melee_attacks_dict = {
@@ -242,8 +294,8 @@ melee_attacks_dict = {
     "uppercut": uppercut,
     "down chop": down_chop,
     "low kick": low_kick,
-    "roundhouse kick": roundhouse_kick
-#    "block": block
+    "roundhouse kick": roundhouse_kick,
+    "block": block
 }
 # ---areas---
 city_square = Area("City Square", "The center of the city.", ["citizen1", "citizen2", "head knight"], [], ["city smithy", "city west gate", "city south gate", "city north gate", "city east gate"])
@@ -255,9 +307,9 @@ city_east_gate = Area("City East Gate", "The east gate of the city.", ["east gat
 grassy_fields = Area("Grassy Fields ", "The lush green fields to the east of the city. There's a fork in the path leading to north and south Redwood Forest.", ["sheep"], [], ["city east gate", "grassy fields northeast", "grassy fields southeast"])
 grassy_fields_northeast = Area("Grassy Fields Northeast", "The path that goes to the north of the Redwood Forest.", ["traveler"], ["bandit pair"], ["redwood forest north", "grassy fields"])
 grassy_fields_southeast = Area("Grassy Fields Southeast", "The path that goes to the south of the Redwood Forest.", ["bandit group"], [], ["grassy fields", "redwood forest south"])
-redwood_forest_north = Area("Redwood Forest North", "Northern parts of the Redwood Forest.", ["bandit leader"], ["bandit army"], [])
+redwood_forest_north = Area("Redwood Forest North", "Northern parts of the Redwood Forest.", [], ["bandit army", "bandit leader"], [])
 redwood_forest_south = Area("Redwood Forest South", "Southern parts of the Redwood Forest.", [], [], ["grassy fields southeast", "deeper redwood forest"])
-bandit_camp = Area("Deeper Redwood Forest", "The camp bandits had made in the Redwood Forest.", ["bandit leader"], ["bandit army"], [])
+bandit_camp = Area("Deeper Redwood Forest", "The camp bandits had made in the Redwood Forest.", [], ["bandit army", "bandit leader"], [])
 
 area_dict = {
     "city square": city_square,
@@ -295,7 +347,7 @@ def start():
     current_area = city_square
 
     print("--<Hello Player>-- \n")
-    print("This is your last few days in the city. After this week, you have to go to the kingdom capital to live with your father. \n\nYou decide that you want to explore the Redwood forest that is to the east of the city. It's said that theres a treasure chest hidden at the center of the forest. You want to try to see if you can find it. \n\nAfter all, it was your grandfather who hid it there. \n")
+    print("This is your last few days of in this city. After this week, your summer vacation ends and you have to go back home for school. \n\nYou decide that you want to explore the Redwood forest that is to the east of the city. \n")
 
     while active:
         player_name = input("What is your name, player?>> ")
@@ -381,7 +433,6 @@ def player_command(input):
         if len(input) >= 2:
             target = input[-2] + " " + input[-1]
             for enemy in current_area.enemies:
-                print(enemy)
                 if target == enemy:
                     target = enemy_dict.get(enemy)
                     fight(player, target)
@@ -400,23 +451,31 @@ def player_command(input):
         print("Blacksmith: Ok, hang on for a bit, im almost done with the sword. \n--<15 minutes later>-- \n")
         print(f"--<{player.name} obtained a sword!>--")
     
-    elif input == ['pickup', 'letter'] and current_area == grassy_fields_northeast:
-        players.items.append("letter")
+    elif input == ['take', 'letter'] and current_area == grassy_fields_northeast:
+        player.items.append("letter")
         print("The letter is addressed to the head knight of the city.")
         print(f"--<{player.name} obtained a letter!>--")
     
     elif input == ['give', 'letter'] and current_area == city_square:
         player.items.remove("letter")
-        print("--<You have successfully delivered the letter to the head knight>--")
+        print("--<You have successfully delivered the letter to the head knight>-- \n")
         completion = "True"
         
-    elif current_area == bandit_camp or current_area == redwood_forest_north:
+    else:
+        print("--<Unable to understand your input, try again>-- \n")
+
+
+    if current_area == bandit_camp or current_area == redwood_forest_north:
         print("--<You walked into the forbidden zone>-- \n")
+        print("--<You get ambushed by the bandits>--")
+        print("--<You prepare to fight them, knowing that you won't make it out alive>-- \n")
         for enemy in current_area.enemies:
             target = enemy_dict.get(enemy)
             fight(player, target)
-    else:
-        print("--<Unable to understand your input, try again>-- \n")
+            if player.is_alive():
+                completion = "True"
+                print("--<You beated the leader and his army that is supposed to be impossible>--")
+                print("--<Secret Ending: Beating the Bandits>-- \n")
 
 
 # ----------The Game----------
@@ -427,8 +486,9 @@ while player.is_alive() and completion == "False":
     player_command(reply)
 
 if not player.is_alive():
-    print("--<Game Over!>--")
-    print("Heres a hint: 'give letter' \n")
+    print(" \n--<Game Over!>-- \n")
+    print("Heres a hint: talk to the npcs ")
+    print("Another hint: 'letter' \n")
 
 if completion == "True":
     print("--<Congratulations, you beaten the game!🥳🥳>--")
