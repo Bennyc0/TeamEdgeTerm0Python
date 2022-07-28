@@ -5,6 +5,7 @@ from time import sleep
 delay = 1
 completion = "False"
 cmds = "Type 'go' then the area's name that you want to go to move there. \nType 'look' to see the information of the area you are currently in. \nType 'mystats' to check your profile. \nType 'talk' then the npc's name you want to talk with to talk with them. \nType 'fight' then the enemy's name to fight them. \nType 'help' to see the commands again.\n"
+game_hints = ["Hint: You can answer the questions some npcs ask", "Hint: 'Letter'"]
 
 
 # ----------NPCs----------
@@ -115,7 +116,7 @@ class Player:
                 while active:
                     player_guess = input(" \nPlease guess a number(0-25): ")
                     if player_guess.isdigit():
-                        if int(player_guess) >= block_chance - 2 or int(
+                        if int(player_guess) >= block_chance - 2 and int(
                                 player_guess) <= block_chance - 2:
                             block_percent = 100
                             print("\n --<Perfect Block!>-- \n")
@@ -219,10 +220,11 @@ class Player:
 
 
 class Player_attack:
-    def __init__(self, name, description, damage, accuracy):
+    def __init__(self, name, description, min_damage, max_damage, accuracy):
         self.name = name
         self.description = description
-        self.damage = damage
+        self.min_damage = min_damage
+        self.max_damage = max_damage
         self.accuracy = accuracy
 
     def __repr__(self):
@@ -233,7 +235,7 @@ class Player_attack:
     def accuracy_check(self):
         random_number = random.randint(0, 100)
 
-        if self.accuracy >= random_number:
+        if self.accuracy <= random_number:
             self.damage = 0
             return self.damage
         else:
@@ -338,21 +340,18 @@ enemy_dict = {
 # ---player attacks---
 heavy_slash = Player_attack(
     "Heavy Slash",
-    "A heavy slash using your sword. Does high damage, but is very slow and easy to evade.",
-    random.randint(30, 40), 50)
+    "A heavy slash using your sword. Does high damage, but is very slow and easy to evade.", 30, 40, 50)
 sword_pierce = Player_attack(
     "Sword Pierce",
-    "A piercing attacking with your sword. Requires high precision or you will miss the weakspots.",
-    random.randint(30, 35), 60)
+    "A piercing attacking with your sword. Requires high precision or you will miss the weakspots.", 30, 35, 60)
 sword_slice = Player_attack(
     "Sword Slice",
-    "A slicing attack using your sword. It it very weak, but is easy to use and hit your target.",
-    random.randint(10, 15), 95)
+    "A slicing attack using your sword. It it very weak, but is easy to use and hit your target.", 10, 15, 95)
 # sword_parry = Player_attack("Sword Parry", "A hard defensive technique that allows to you prevent an enemy attack landing on you. You also reflect most damage.", round(enemy_move*4/5), 70)
 # sword_counter = Player_attack("Sword Counter", "A defensive technique that allows you to reflect partial damage to your enemy.", round(enemy_move*2/5), 90)
 sword_block = Player_attack(
     "Sword Block",
-    "A basic defensive technique that blocks and prevents most damage.", 0,
+    "A basic defensive technique that blocks and prevents most damage.", 0, 0
     100)
 #nerfing sword blocks, cant have the player blocking and then attacking while enemy is "stunned", scratch the original plan.
 #parry and counter are WIP, might not be finished and used.
@@ -363,18 +362,14 @@ uppercut = Player_attack("Uppercut", "A low punch that goes upwards.",
                          random.randint(12, 18), 80)
 down_chop = Player_attack(
     "Downwards Chop",
-    "A chopping attack. You chop your enemies hard on the head with this. They are going to be seeing stars.",
-    random.randint(20, 25), 70)
-low_kick = Player_attack("Low Kick", "A kick that gets them almost everytime.",
-                         random.randint(10, 15), 90)
+    "A chopping attack. You chop your enemies hard on the head with this. They are going to be seeing stars.", 20, 25, 70)
+low_kick = Player_attack("Low Kick", "A kick that gets them almost everytime.", 10, 15, 90)
 roundhouse_kick = Player_attack(
     "Roundhouse Kick",
-    "A semicircular kick, striking the enemy with your leg. Easy to evade but hits hard.",
-    random.randint(30, 40), 60)
+    "A semicircular kick, striking the enemy with your leg. Easy to evade but hits hard.", 30, 40, 60)
 block = Player_attack(
     "Block",
-    "Blocks your enemy's attack with your arms. Gonna hurt, even with armor on.",
-    0, 100)
+    "Blocks your enemy's attack with your arms. Gonna hurt, even with armor on.", 0, 0, 100)
 #accuracy system is used to balance out the game. Attack selection will be pointless without different damage, can't have the player picking strongest attack everytime.
 
 sword_attacks_list = [
@@ -632,7 +627,7 @@ def player_command(input):
             target = enemy_dict.get(enemy)
             fight(player, target)
             if player.is_alive():
-                completion = "True" 
+                completion = "True"
                 print(
                     "--<You beated the leader and his army that is supposed to be impossible>--"
                 )
@@ -647,9 +642,9 @@ while player.is_alive() and completion == "False":
     player_command(reply)
 
 if not player.is_alive():
+    random_hint = random.choice(game_hints)
     print(" \n--<Game Over!>-- \n")
-    print("Heres a hint: talk to the npcs ")
-    print("Another hint: 'letter' \n")
+    print(random_hint)
 
 if completion == "True":
     print("--<Congratulations, you beaten the game!🥳🥳>--")
