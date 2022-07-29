@@ -25,7 +25,8 @@ for x in range(11):
    
 
 #-->TODO: Write a loop that prints a happy birthday message for every year you have been alive.
-
+for x in range(15):
+    print('Happy Birthday')
 
 
 print("------------------- CHALLENGE 2 : ITERATOR ----------------------")
@@ -38,11 +39,12 @@ for x in colors:
     print("The color is: " + x)
 
 #-->TODO: Declare a list with at least 5 animals. You provide the animals.
-animals = []
+animals = ['Duck', 'Chicken', 'Tiget', 'Parrot', 'Snake']
 
 #-->TODO: Print all the animals in the array with a for loop. 
 
-
+for x in animals:
+    print(x)
 
 print("------------------- CHALLENGE 3 : EVEN COUNTDOWN ------------------")
 
@@ -57,9 +59,16 @@ else:
     print(str(random) + " is odd!")
 
 #-->TODO: Write a function that counts BACKWARDS from 100 and prints only even numbers
-
+for x in range(100, 0, -2): 
+    print(x)
 
 #-->TODO: Write a function that counts BACKWARDS from the given random number and prints only odd numbers
+for x in range(random, 0, -2):
+    if random % 2 != 0:
+        print(x)
+    elif random % 2 == 0:
+        random = random - 1
+        print(x)
 
 
 print("------------------- CHALLENGE 4 : Finder ------------------")
@@ -73,15 +82,22 @@ else:
 
 #-->TODO Declare a list of any strings you  want: cities, friends, movies, etc.
 
+number = [1, 7, 9, 14, 21]
 
 
 #-->TODO Write function to prompt the user to "Guess" if an element is present in your list. Store their response in a variable. 
 #   --> If their guess is in your list, print CONGRATULATIONS!
 
+def guess_num():
+    user_guess = int(input('Guess a number that is on my list (1-25)>> '))
+    if user_guess in number:
+        print('CONGRATULATIONS! Your guess is on my list. 😀')
+    else:
+        print('Sorry, your guess is not on my list.')
 
 #-->TODO Call your function.
 
-
+guess_num()
 
 print("------------------- CHALLENGE 5 : Nested ------------------")
 
@@ -99,5 +115,30 @@ for color in colors:
 
 #-->TODO Write a function that prints every letter in a sentence that a user enters.
 
+# def sentence_letter_num():
+#     sentence = input('Please type in your sentence: ')
+    
 
-#-->CHALLENGE: Let the user know which word is the shortest one!
+#     for word in sentence:
+#         for letter in word:
+#             print(letter)
+    
+#     short_word = len(sentence[-1])
+
+#     for word in sentence:
+#         letters = len(word)
+#         if letters < short_word:
+#             short_word = sentence.pop(0)
+#         elif len(sentence) == 1:
+#             print('The shortest word in your sentence is: ', short_word)
+#         else:
+#             removed = sentence.pop(0)
+        
+        
+
+
+
+# sentence_letter_num()
+
+#-->UPCHALLENGE: Let the user know which word is the shortest one!
+

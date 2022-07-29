@@ -20,7 +20,7 @@ from time import sleep
 
 print("-------------------  SUPERHERO !!  -------------------")
 
-DELAY = 10
+DELAY = 1
 DAMAGE_LIMIT = 5
 MAJOR_BLOW = DAMAGE_LIMIT -2
 LIVES_TOP_RANGE = 60
@@ -99,7 +99,7 @@ joker.name = "Joker 🦹‍♂️"
 joker.is_alive = True
 joker.lives=[]
 joker.taunts =["You are a schmemer" , "Don't mess with the Joker!" , "Pick your face off the ground, you might need it!", "Getting tired of the beatings?"]
-joker.cries = ["Aaaa!" , "Goh!" , "Hmph!" ,"You will pay for self"]
+joker.cries = ["Aaaa!" , "Goh!" , "Hmph!" ,"You will pay for that!"]
 joker.fill_health()
 
 

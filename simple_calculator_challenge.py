@@ -190,7 +190,7 @@ if use_sleep_calc == 'yes':
 else:
 	print('Ok, thank you for using the simple calculator. \n')
 
-#--------------Continuing Calculator----------------
+#--------------Continuous Calculator----------------
 
 def cont_calc():
 	active = True
@@ -204,6 +204,7 @@ def cont_calc():
 			if len(numbers) == 0:
 				num_input = int(input('What number?: '))
 
+		# ".strip" is used to check if input is either blank or just spaces
 		if operation.strip():
 			numbers.append(num_input)
 			num1 = numbers.pop(0)
@@ -216,4 +217,6 @@ def cont_calc():
 				print(blank)
 		else:
 			print(blank)
+
+print('Testing Phase: Continuous Calculator')
 cont_calc()
