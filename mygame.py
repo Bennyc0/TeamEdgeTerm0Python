@@ -368,7 +368,7 @@ def start():
     global current_area
 
     active = True
-    current_area = grassy_fields_northeast
+    current_area = city_square
 
     print("--<Hello Player>-- \n")
     print("This is your last few days of in this city. After this week, your summer vacation ends and you have to go back home for middle school. \n\nYou decide that you want to explore the Redwood forest that is to the east of the city. \n")
@@ -390,7 +390,7 @@ def start():
 
     print(cmds)
     print(notes)
-    player = Player(player_name, ["sword"])
+    player = Player(player_name, [])
 
 
 # ---game system---
