@@ -78,15 +78,15 @@ class Player:
         while active:
             if "sword" in player.items:
                 move_type = input(
-                    "Do you wish to use sword attacks or melee attacks?(You can just type 'sword' or 'melee')>> ")
-                if "melee" in move_type or "sword" in move_type:
+                    "Do you wish to use sword attacks or melee attacks?(You can just type 'sword'(s) or 'melee'(m))>> ")
+                if "melee" in move_type or "sword" in move_type or move_type == "s" or move_type == "m":
                     pass
                 else:
                     print("--<Unable to understand your selection>-- \n")
             else:
                 move_type = "melee"
 
-            if "melee" in move_type:
+            if "melee" in move_type or move_type == "m":
                 print(melee_attacks_list)
                 select_move = input("Which move do you wish to use?>> ")
                 print("\n")
@@ -97,7 +97,7 @@ class Player:
                         return attack.name
                         active = False
 
-            elif "sword" in move_type:
+            elif "sword" in move_type or move_type == "s":
                 print(sword_attacks_list)
                 select_move = input("Which move do you wish to use?>> ")
                 print("\n")
@@ -194,11 +194,13 @@ class Player:
             print("--<You Won!>-- \n")
             for enemies in enemy_dict:
                 if enemy.name.lower() == enemies:
-                    current_area.enemies.remove(enemies.lower())
-                else:
-                    for enemies in npc_dict:
-                        if enemy.name.lower() == enemies:
-                            current_area.npcs.remove(enemies.lower())
+                    enemies = enemy_dict.get(enemies)
+                    current_area.enemies.remove(enemies.name.lower())
+
+            for npc_enemies in npc_dict:
+                if enemy.name.lower() == npc_enemies:
+                    npc_enemies = npc_dict.get(npc_enemies)
+                    current_area.npcs.remove(npc_enemies.name.lower())
 
         else:
             print("--<You Lost!>-- \n")
@@ -247,16 +249,16 @@ class Area:
 
 # ----------The Database----------
 # ---npcs---
-west_gate_guards = NPC("West Gate Guards", "Two armoured guards stand guard with their spears at the gate.", "Guard: This gate is closed. Try the north or the east gate.", 100, 15)
-south_gate_guards = NPC("South Gate Guards", "Two armoured guards stand guard with their spears at the gate.", "Guard: This is area is closed due to landslides in the area. It will take a few days before it's open again.", 100, 15)
-north_gate_guards = NPC("North Gate Guards", "Two armoured guards stand guard with their spears at the gate.", "Guard: There has been bandit sightings recently. You should bring a sword with you, if you do't have one, go get one from the blacksmith. Take care out there!", 100, 15)
-east_gate_guards = NPC("East Gate Guards", "Two armoured guards stand guard with their spears at the gate.", "Guard: There has been bandit sightings recently. You should bring a sword with you, if you do't have one, go get one from the blacksmith. Take care out there!",100, 15)
-citizen1 = NPC("Worried Lady", "A lady that has a very worried expression on her face.", "Lady: Theres a rumor going around that bandits are going to attack the city. I hope it's not true...", 50, 0)
-citizen2 = NPC("Busy Merchant", "A merchant unloading his boxes of wares from his cart.", "Merchant: Quit blocking my path! I gotta get these boxes unloaded.", 50, 0)
-blacksmith = NPC( "Working Blacksmith","A blacksmith hammering away on his unfinished sword.","Blacksmith: Hm? What are you doing here? Are you here for the sword?", 50, 0)
-sheep = NPC("A Sheep", "A sheep eating its grass and enjoying the weather","Sheep: BAAAAAAAA!", 10, 0)
-traveler = NPC("Traveler", "A heavily wounded traveler.","Traveler: TAKE this letter and GIVE it to the head knight in the city for me please. I won't be able to make it with these injuries. Also, whatever you do, don't go into the forest. \n--<Type 'take letter' to take the letter>--", 0, 0)
-head_knight = NPC("Head Knight", "The head of the knights of the city.", "Head Knight: ...", 150, 20)
+west_gate_guards = NPC("West Gate Guards", "Two armoured guards stand guard with their spears at the gate.", "Guard: This gate is closed. Try the north or the east gate.", 80, 10)
+south_gate_guards = NPC("South Gate Guards", "Two armoured guards stand guard with their spears at the gate.", "Guard: This is area is closed due to landslides in the area. It will take a few days before it's open again.", 80, 10)
+north_gate_guards = NPC("North Gate Guards", "Two armoured guards stand guard with their spears at the gate.", "Guard: There has been bandit sightings recently. You should bring a sword with you, if you do't have one, go get one from the blacksmith. Take care out there!", 80, 10)
+east_gate_guards = NPC("East Gate Guards", "Two armoured guards stand guard with their spears at the gate.", "Guard: There has been bandit sightings recently. You should bring a sword with you, if you do't have one, go get one from the blacksmith. Take care out there!",80, 10)
+citizen1 = NPC("Worried Lady", "A lady that has a very worried expression on her face.", "Lady: Theres a rumor going around that bandits are going to attack the city. I hope it's not true...", 50, 3)
+citizen2 = NPC("Busy Merchant", "A merchant unloading his boxes of wares from his cart.", "Merchant: Quit blocking my path! I gotta get these boxes unloaded.", 50, 3)
+blacksmith = NPC( "Working Blacksmith","A blacksmith hammering away on his unfinished sword.","Blacksmith: Hm? What are you doing here? Are you here for the sword?", 50, 5)
+grassyfields_sheep = NPC("A Sheep", "A sheep eating its grass and enjoying the weather","Sheep: BAAAAAAAA!", 10, 1)
+wounded_traveler = NPC("Traveler", "A heavily wounded traveler.","Traveler: TAKE this letter and GIVE it to the head knight in the city for me please. I won't be able to make it with these injuries. Also, whatever you do, don't go into the forest. \n--<Type 'take letter' to take the letter>--", 25, 1)
+head_knight = NPC("Head Knight", "The head of the knights of the city.", "Head Knight: ...", 125, 15)
 
 npc_dict = {
     "west gate guards": west_gate_guards,
@@ -266,17 +268,17 @@ npc_dict = {
     "citizen1": citizen1,
     "citizen2": citizen2,
     "blacksmith": blacksmith,
-    "sheep": sheep,
-    "traveler": traveler,
+    "sheep": grassyfields_sheep,
+    "traveler": wounded_traveler,
     "head knight": head_knight
 }
 
 # ---bandits---
 bandit_alone = Enemy("Bandit", "--<A bandit with a cloak appeared>--", "Bandit: MWAHAHAHAHA- DIE!!!", 100, random.randint(5, 10))
-bandit_pair = Enemy("Bandit Pair", "--<2 wild bandits appeared!>--","Bandits: HAND OVER YOUR MONEY NOW!",random.randint(40, 75), random.randint(5, 15))
-bandit_group = Enemy("Bandit Group", "--<A group of wild bandits appeared!>--","Bandits: Take your pick, life or money?",random.randint(80, 120), random.randint(10, 20))
-bandit_army = Enemy("Bandit Army", "--<An army of wild bandits appeared!>--","DIE INTRUDER!", 250, 25)
-bandit_leader = Enemy("Bandit Leader",  "--<The boss of the wild bandits has appeared!>--",  "You shouldn't had come here kid...", 500, 50)
+bandit_pair = Enemy("Bandit Pair", "--<2 wild bandits appeared!>--","Bandits: HAND OVER YOUR MONEY NOW!",random.randint(40, 55), random.randint(5, 10))
+bandit_group = Enemy("Bandit Group", "--<A group of wild bandits appeared!>--","Bandits: Take your pick, life or money?",random.randint(80, 100), random.randint(10, 15))
+bandit_army = Enemy("Bandit Army", "--<An army of wild bandits appeared!>--","DIE INTRUDER!", 250, 20)
+bandit_leader = Enemy("Bandit Leader",  "--<The boss of the wild bandits has appeared!>--",  "You shouldn't had come here...", 100, 30)
 # bandit alone is supposed to be not fightable
 
 enemy_dict = {
@@ -366,7 +368,7 @@ def start():
     global current_area
 
     active = True
-    current_area = city_square
+    current_area = grassy_fields_northeast
 
     print("--<Hello Player>-- \n")
     print("This is your last few days of in this city. After this week, your summer vacation ends and you have to go back home for middle school. \n\nYou decide that you want to explore the Redwood forest that is to the east of the city. \n")
@@ -388,7 +390,7 @@ def start():
 
     print(cmds)
     print(notes)
-    player = Player(player_name, [])
+    player = Player(player_name, ["sword"])
 
 
 # ---game system---
@@ -457,14 +459,16 @@ def player_command(input):
 
     elif "fight" in input:
         if len(input) >= 2:
-            target = input[-2] + " " + input[-1]
+            target1 = input[-1]
+            target2 = input[-2] + " " + input[-1]
             for enemy in current_area.enemies:
-                if target == enemy:
+                if target1 == enemy or target2 == enemy:
                     target = enemy_dict.get(enemy)
                     fight(player, target)
                 else:
-                    for enemy in current_area.npcs:
-                        if target == npc_dict.get(enemy):
+                    for npc_enemy in current_area.npcs:
+                        if target1 == npc_enemy or target2 == npc_enemy:
+                            target = npc_dict.get(npc_enemy)
                             fight(player, target)
         else:
             print("--<Please state the enemy you want to fight after 'fight'>--")
@@ -476,18 +480,18 @@ def player_command(input):
         print(cmds)
 
     #extra features:
-    elif "yes" in input and current_area == city_smithy:
+    elif "yes" in input and current_area == city_smithy and "blacksmith" in city_smithy.npcs:
         player.items.append("sword")
         print("Blacksmith: Ok, hang on for a bit, im almost done with the sword. \n--<15 minutes later>-- \n")
         print(f"--<{player.name} obtained a sword!>--")
 
-    elif input == ['take', 'letter'] and current_area == grassy_fields_northeast and "letter" not in player.items:
+    elif input == ['take', 'letter'] and current_area == grassy_fields_northeast and "letter" not in player.items and "traveler" in grassy_fields_northeast.npcs:
         player.items.append("letter")
         print("The letter is addressed to the head knight of the city.")
         print(f"--<{player.name} obtained a letter!>--")
-        head_knight = NPC("Head Knight", "The head of the knights of the city.", "Head Knight: How can I help you?")
+        head_knight = NPC("Head Knight", "The head of the knights of the city.", "Head Knight: How can I help you?", 125, 15)
 
-    elif input == ['give', 'letter'] and current_area == city_square:
+    elif input == ['give', 'letter'] and current_area == city_square and "head knight" in city_square.npcs:
         player.items.remove("letter")
         print("--<You have successfully delivered the letter to the head knight>-- \n")
         completion = "True"
