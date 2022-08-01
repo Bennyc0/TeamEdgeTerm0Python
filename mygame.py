@@ -7,7 +7,6 @@ completion = "False"
 cmds = "Type 'go' then the area's name that you want to go to move there. \nType 'look' to see the information of the area you are currently in. \nType 'mystats' to check your profile. \nType 'talk' then the npc's name you want to talk with to talk with them. \nType 'fight' then the enemy's name to fight them. \nType 'help' to see the commands again. \n"
 game_hints = ["Hint: You can answer the questions some npcs ask", "Hint: 'Letter'"]
 notes = "Note: BTW, I ordered the move options in fighting from lowest damage to highest(Higher damage = Less accuracy). \nNote2: Talk To The Npcs! \nNote3: PLEASE STOP TRYING TO FIGHT EVERY NPC YOU SEE!!! \nNote4: Make sure to 'look'! \n"
-
 # ----------NPCs----------
 class NPC:
     def __init__(self, name, description, dialogue, health, damage):
@@ -29,7 +28,6 @@ class NPC:
 
     def attack(self, enemy):
         while self.is_alive() and enemy.is_alive():
-            self_move = random.choice(self.moves)
             enemy.health = round(enemy.health - self.damage)
 
 
@@ -51,7 +49,6 @@ class Enemy:
 
     def attack(self, enemy):
         while self.is_alive() and enemy.is_alive():
-            self_move = random.choice(self.moves)
             enemy.health = round(enemy.health - self.damage)
 
 
@@ -200,7 +197,7 @@ class Player:
             for npc_enemies in npc_dict:
                 if enemy.name.lower() == npc_enemies:
                     npc_enemies = npc_dict.get(npc_enemies)
-                    current_area.npcs.remove(npc_enemies.name.lower())
+                    current_area.npcs.remove(npc_enemies.name.lower()) 
 
         else:
             print("--<You Lost!>-- \n")
@@ -249,28 +246,28 @@ class Area:
 
 # ----------The Database----------
 # ---npcs---
-west_gate_guards = NPC("West Gate Guards", "Two armoured guards stand guard with their spears at the gate.", "Guard: This gate is closed. Try the north or the east gate.", 80, 10)
-south_gate_guards = NPC("South Gate Guards", "Two armoured guards stand guard with their spears at the gate.", "Guard: This is area is closed due to landslides in the area. It will take a few days before it's open again.", 80, 10)
-north_gate_guards = NPC("North Gate Guards", "Two armoured guards stand guard with their spears at the gate.", "Guard: There has been bandit sightings recently. You should bring a sword with you, if you do't have one, go get one from the blacksmith. Take care out there!", 80, 10)
-east_gate_guards = NPC("East Gate Guards", "Two armoured guards stand guard with their spears at the gate.", "Guard: There has been bandit sightings recently. You should bring a sword with you, if you do't have one, go get one from the blacksmith. Take care out there!",80, 10)
-citizen1 = NPC("Worried Lady", "A lady that has a very worried expression on her face.", "Lady: Theres a rumor going around that bandits are going to attack the city. I hope it's not true...", 50, 3)
-citizen2 = NPC("Busy Merchant", "A merchant unloading his boxes of wares from his cart.", "Merchant: Quit blocking my path! I gotta get these boxes unloaded.", 50, 3)
-blacksmith = NPC( "Working Blacksmith","A blacksmith hammering away on his unfinished sword.","Blacksmith: Hm? What are you doing here? Are you here for the sword?", 50, 5)
-grassyfields_sheep = NPC("A Sheep", "A sheep eating its grass and enjoying the weather","Sheep: BAAAAAAAA!", 10, 1)
-wounded_traveler = NPC("Traveler", "A heavily wounded traveler.","Traveler: TAKE this letter and GIVE it to the head knight in the city for me please. I won't be able to make it with these injuries. Also, whatever you do, don't go into the forest. \n--<Type 'take letter' to take the letter>--", 25, 1)
-head_knight = NPC("Head Knight", "The head of the knights of the city.", "Head Knight: ...", 125, 15)
+west_gate_guards = NPC("West Gate Guards", "Two armoured guards stand guard with their spears at the gate.", "Guard: This gate is closed. Try the north or the east gate.", 70, 10)
+south_gate_guards = NPC("South Gate Guards", "Two armoured guards stand guard with their spears at the gate.", "Guard: This is area is closed due to landslides in the area. It will take a few days before it's open again.", 70, 10)
+north_gate_guards = NPC("North Gate Guards", "Two armoured guards stand guard with their spears at the gate.", "Guard: There has been bandit sightings recently. You should bring a sword with you, if you do't have one, go get one from the blacksmith. Take care out there!", 70, 10)
+east_gate_guards = NPC("East Gate Guards", "Two armoured guards stand guard with their spears at the gate.", "Guard: There has been bandit sightings recently. You should bring a sword with you, if you do't have one, go get one from the blacksmith. Take care out there!",70, 10)
+citizen1 = NPC("Citizen1", "A lady that has a very worried expression on her face.", "Lady: Theres a rumor going around that bandits are going to attack the city. I hope it's not true...", 30, 3)
+citizen2 = NPC("Citizen2", "A merchant unloading his boxes of wares from his cart.", "Merchant: Quit blocking my path! I gotta get these boxes unloaded.", 30, 3)
+blacksmith = NPC("Blacksmith","A blacksmith hammering away on his unfinished sword.","Blacksmith: Hm? What are you doing here? Are you here for the sword?", 40, 5)
+sheep = NPC("Sheep", "A sheep eating its grass and enjoying the weather","Sheep: BAAAAAAAA!", 10, 1)
+traveler = NPC("Traveler", "A heavily wounded traveler.","Traveler: TAKE this letter and GIVE it to the head knight in the city for me please. I won't be able to make it with these injuries. Also, whatever you do, don't go into the forest. \n--<Type 'take letter' to take the letter>--", 20, 1)
+head_knight = NPC("Head Knight", "The head of the knights of the city.", "Head Knight: ...", 100, 15)
 
 npc_dict = {
     "west gate guards": west_gate_guards,
     "south gate guards": south_gate_guards,
     "north gate guards": north_gate_guards,
     "east gate guards": east_gate_guards,
+    "head knight": head_knight,
     "citizen1": citizen1,
     "citizen2": citizen2,
     "blacksmith": blacksmith,
-    "sheep": grassyfields_sheep,
-    "traveler": wounded_traveler,
-    "head knight": head_knight
+    "sheep": sheep,
+    "traveler": traveler
 }
 
 # ---bandits---
@@ -449,8 +446,7 @@ def player_command(input):
             for npc in current_area.npcs:
                 if npc1 == npc or npc2 == npc or npc3 == npc:
                     interact_npc = npc_dict.get(npc)
-                    print(interact_npc.description + "\n" +
-                          interact_npc.dialogue + "\n")
+                    print(interact_npc.description + "\n" + interact_npc.dialogue + "\n")
                     if npc == "head knight" and "letter" in player.items and current_area == city_square:
                         print("--<Type 'give letter' to give the letter to head knight!>--")
 
@@ -461,15 +457,21 @@ def player_command(input):
         if len(input) >= 2:
             target1 = input[-1]
             target2 = input[-2] + " " + input[-1]
+            target3 = "nothing"
+
+            if len(input) >= 3:
+                target3 = input[-3] + " " + target2
+
             for enemy in current_area.enemies:
-                if target1 == enemy or target2 == enemy:
+                if target1 == enemy or target2 == enemy or target3 == enemy:
                     target = enemy_dict.get(enemy)
                     fight(player, target)
-                else:
-                    for npc_enemy in current_area.npcs:
-                        if target1 == npc_enemy or target2 == npc_enemy:
-                            target = npc_dict.get(npc_enemy)
-                            fight(player, target)
+
+            for npc_enemy in current_area.npcs:
+                if target1 == npc_enemy or target2 == npc_enemy or target3 == npc_enemy:
+                    target = npc_dict.get(npc_enemy)
+                    fight(player, target)
+
         else:
             print("--<Please state the enemy you want to fight after 'fight'>--")
 
